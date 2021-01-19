@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const books = require('./db')
 const bodyParser = require('body-parser')
+const port = 3030;
+const hostname = "192.168.1.73";
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -10,8 +12,9 @@ app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
-app.listen(3000, () => {
+app.listen(port, hostname, () => {
     console.log('Start server at port 3000.')
+    
 })
 
 app.post('/books', (req, res) => {
