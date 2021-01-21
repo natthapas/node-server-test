@@ -8,18 +8,20 @@ const hostname = "localhost";
 var users = [];
 var userDetails = [];
 var cors = require('cors');
+const { json } = require('express');
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(cors({origin: 'http://localhost:4200'}));
+
+app.use(cors({ origin: 'http://localhost:4200' }));
 
 app.get('/', (req, res) => {
     res.send('get Successful')
 })
 
 app.listen(port, () => {
-    console.log('Start server at port 3030.')
+    console.log('Listening to port' + port + ".")
 
 })
 
@@ -53,24 +55,37 @@ app.get('/users', (req, res) => {
         var jsonString = JSON.stringify(fileContents);
         var i = 0;
         for (let index = 0; index < jsonString.length; index++) {
-          
             var ipaddress;
             if (jsonString.substring(index, index + 13) == "ansible_host=") {
-              
+
                 ipaddress = jsonString.substring(index + 13, index + 26);
-                userDetails[i] = { "name": "COM" + (i+1) + "", "ip_address": ipaddress };
-                users.push(userDetails[i]);
+
+                var lastLetter = ipaddress.substring(ipaddress.length, ipaddress.length - 1);
+
+                if (parseInt(lastLetter) >= 0) {
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+                } else if (lastLetter == " ") {
+                    ipaddress = ipaddress.substring(0, ipaddress.length - 1);
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+
+                } else {
+                    ipaddress = ipaddress.substring(0, ipaddress.length - 2);
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+                }
                 i++;
-    
-            } else {
-                
             }
         }
-    
-    
     } catch (e) {
         console.log(e);
     }
-
     res.json(users);
 })
+
+app.get('/docapture', (req, res) => {
+    
+})
+
+
