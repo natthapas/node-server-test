@@ -2,21 +2,27 @@ const express = require('express')
 const app = express()
 const books = require('./db')
 const bodyParser = require('body-parser')
-const port = 3030;
-const hostname = "192.168.1.73";
 const fs = require('fs');
-const yaml = require('js-yaml');
-
+const port = 3030;
+const hostname = "localhost";
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+try {
+    let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
+    console.log(fileContents);
+    fileContents.
+} catch (e) {
+    console.log(e);
+}
 
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
-app.listen(port, hostname, () => {
-    console.log('Start server at port 3000.')
+app.listen(port, () => {
+    console.log('Start server at port 3030.')
     
 })
 
