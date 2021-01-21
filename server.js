@@ -84,10 +84,6 @@ app.get('/users', (req, res) => {
     res.json(users);
 })
 
-app.get('/docapture', (req, res) => {
-
-})
-
 app.get('/getAll', (req, res) => {
 
     clientDetail = [];
@@ -103,7 +99,7 @@ app.get('/getAll', (req, res) => {
 
         } if(contents.substring(index,index + 14) == 'dashboard_url='){
             dashboardUrl = contents.substring(index + 14, contents.length-2);
-            dashboardUrl = dashboardUrl.split('\"');
+            dashboardUrl = dashboardUrl.split('\\"');
             dashboardUrl = dashboardUrl[1];
             clientDetail[i] = {"ip_address" : ipAddress, "dashboard_url": dashboardUrl};
             client.push(clientDetail[i]);
@@ -113,10 +109,13 @@ app.get('/getAll', (req, res) => {
 
         // console.log(client);
     }
-    console.log(client);
     res.json(client);
 
 } catch (e) {
     console.log(e);
 }
 })
+
+
+
+
