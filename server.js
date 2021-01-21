@@ -85,7 +85,38 @@ app.get('/users', (req, res) => {
 })
 
 app.get('/docapture', (req, res) => {
-    
+
 })
 
+app.get('/getAll', (req, res) => {
 
+    clientDetail = [];
+    client = [];
+    var i = 0;
+    try {
+    let fileContents = fs.readFileSync('./hosts.yml', 'utf-8',);
+    const contents = JSON.stringify(fileContents);
+
+    for (let index = 0; index < contents.length; index++) {
+        if(contents.substring(index,index + 13) == 'ansible_host='){
+            ipAddress = contents.substring(index + 13,index + 26);
+
+        } if(contents.substring(index,index + 14) == 'dashboard_url='){
+            dashboardUrl = contents.substring(index + 14, contents.length-2);
+            dashboardUrl = dashboardUrl.split('\"');
+            dashboardUrl = dashboardUrl[1];
+            clientDetail[i] = {"ip_address" : ipAddress, "dashboard_url": dashboardUrl};
+            client.push(clientDetail[i]);
+            i++;
+            // console.log(dashboardUrl);
+        }
+
+        // console.log(client);
+    }
+    console.log(client);
+    res.json(client);
+
+} catch (e) {
+    console.log(e);
+}
+})
