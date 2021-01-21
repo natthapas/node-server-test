@@ -1,0 +1,78 @@
+[test]
+com01 ansible_host=192.168.1.226 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-MED-D2"
+[box]
+box01 ansible_host=192.168.1.123 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+box02 ansible_host=192.168.1.128 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+box03 ansible_host=192.168.1.129 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+
+[shuttle]
+shuttle01 ansible_host=192.168.1.124 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+shuttle02 ansible_host=192.168.1.127 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+shuttle03 ansible_host=192.168.1.130 dashboard_url="http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+
+
+[kiosk]
+kiosk01 ansible_host=192.168.1.205 dashboard_url="http://192.168.1.71/self-activate/#/canvas/kiosk-portrait-home?machine=giinos194&ccsVer=2"
+
+[kioskprod]
+kiosk02 ansible_host=192.168.1.194 dashboard_url="http://192.168.1.71/self-activate/#/canvas/kiosk-portrait-home?machine=giinos194&ccsVer=2"
+
+[aio2]
+aio02 ansible_host=192.168.1.124
+
+
+[pi]
+pi01 ansible_host=192.168.1.209
+
+
+[newhost]
+kiosk01 ansible_host=192.168.1.205 new_hostname=Q-REG-KS1
+
+[shuttle:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=giinos
+ansible_pass=giinos
+ansible_become_pass=giinos
+
+[kioskprod:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=holistic
+ansible_pass=giinos
+ansible_become_pass=giinos
+
+[box:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=giinos
+ansible_pass=giinos
+ansible_become_pass=giinos
+
+[test:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=qmatic
+ansible_pass=Orchestra2020
+ansible_become_pass=Orchestra2020
+
+[kiosk:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=qmatic
+ansible_pass=Orchestra2020
+ansible_become_pass=Orchestra2020
+
+[aio2:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=giinos
+ansible_pass=giinos
+ansible_become_pass=giinos
+
+[newhost:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=qmatic
+ansible_pass=Orchestra2020
+ansible_become_pass=Orchestra2020
+
+[pi:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=qmatic
+ansible_pass=Orchestra@2020
+ansible_become_pass=Orchestra@2020
+
