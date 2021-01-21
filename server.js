@@ -7,12 +7,15 @@ const port = 3030;
 const hostname = "localhost";
 var users = [];
 var userDetails = [];
+var cors = require('cors');
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(cors({origin: 'http://localhost:4200'}));
+
 app.get('/', (req, res) => {
-    res.send('Hello World')
+    res.send('get Successful')
 })
 
 app.listen(port, () => {
@@ -58,7 +61,6 @@ app.get('/users', (req, res) => {
                 userDetails[i] = { "name": "COM" + (i+1) + "", "ip_address": ipaddress };
                 users.push(userDetails[i]);
                 i++;
-                console.log(users);
     
             } else {
                 
