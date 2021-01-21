@@ -5,17 +5,11 @@ const bodyParser = require('body-parser')
 const fs = require('fs');
 const port = 3030;
 const hostname = "localhost";
+var users = [];
+var userDetails = [];
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
-try {
-    let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
-    console.log(fileContents);
-    fileContents.
-} catch (e) {
-    console.log(e);
-}
 
 app.get('/', (req, res) => {
     res.send('Hello World')
@@ -23,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
     console.log('Start server at port 3030.')
-    
+
 })
 
 app.post('/books', (req, res) => {
@@ -42,10 +36,39 @@ app.get('/books/:id', (req, res) => {
 app.put('/books/:id', (req, res) => {
     const updateIndex = books.findIndex(book => book.id === req.params.id)
     res.json(Object.assign(books[updateIndex], req.body))
-  })
+})
 
-  app.delete('/books/:id', (req, res) => {
+app.delete('/books/:id', (req, res) => {
     const deletedIndex = books.findIndex(book => book.id === req.params.id)
     books.splice(deletedIndex, 1)
     res.status(204).send()
- })
+})
+
+app.get('/users', (req, res) => {
+    try {
+        let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
+        var jsonString = JSON.stringify(fileContents);
+        var i = 0;
+        for (let index = 0; index < jsonString.length; index++) {
+          
+            var ipaddress;
+            if (jsonString.substring(index, index + 13) == "ansible_host=") {
+              
+                ipaddress = jsonString.substring(index + 13, index + 26);
+                userDetails[i] = { "name": "COM" + (i+1) + "", "ip_address": ipaddress };
+                users.push(userDetails[i]);
+                i++;
+                console.log(users);
+    
+            } else {
+                
+            }
+        }
+    
+    
+    } catch (e) {
+        console.log(e);
+    }
+
+    res.json(users);
+})
