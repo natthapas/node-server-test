@@ -229,7 +229,7 @@ app.get('/hosts', (req, res) => {
 app.get('/dashboardtest', (req, res) => {
     try {
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({
-            dashboard_url: "http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D2"
+            dashboard_url: "http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
         });
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
         var promise = command.exec();
