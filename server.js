@@ -122,9 +122,7 @@ app.get('/capture/:ip', (req, res) => {
         const file = require(fileName);
         // console.log(file);
 
-        let data = JSON.stringify({
-            "ansible_host": req.params.ip
-        }
+        let data = JSON.stringify({"ansible_host": req.params.ip}
         );
         console.log(data);
 
@@ -139,7 +137,7 @@ app.get('/capture/:ip', (req, res) => {
         //     // console.log(addressData);
         // });
         
-        res.json(data);
+        res.json(file);
     } catch (error) {
         console.log(error);
         res.send(error);
