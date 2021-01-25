@@ -229,7 +229,7 @@ app.get('/hosts', (req, res) => {
 app.get('/dashboardtest', (req, res) => {
     try {
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({
-            dashboard_url: "http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1"
+            dashboard_url: "http://192.168.1.71/dashboard-editor/#/canvas/C1-REG-D1",
         });
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
         var promise = command.exec();
@@ -239,7 +239,28 @@ app.get('/dashboardtest', (req, res) => {
         })
         res.status(200).json({ msg: "200" });
     } catch (e) {
-        res.status(200).json({ msg: e });
+        res.status(400).json({ msg: e });
+        console.log(e);
+    }
+    // res.json(users);
+})
+
+app.get('/screenshot/:ip', (req, res) => {
+    try {
+        let parameter = req.params.ip;
+        console.log(parameter);
+        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/screenshot').variables({
+            ansible_host: parameter,
+        });
+        command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
+        var promise = command.exec();
+        promise.then(function(result) {
+            console.log(result.output);
+            console.log(result.code);
+        })
+        res.status(200).json({ msg: "200", Inputparameter: parameter });
+    } catch (e) {
+        res.status(400).json({ msg: e });
         console.log(e);
     }
     // res.json(users);
