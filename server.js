@@ -4,10 +4,10 @@ const books = require('./db')
 const bodyParser = require('body-parser')
 const fs = require('fs');
 const port = 3030;
-const hostname = "localhost";
 var users = [];
 var userDetails = [];
 var cors = require('cors');
+var Ansible = require('node-ansible');
 const { json } = require('express');
 
 app.use(bodyParser.json())
@@ -90,14 +90,15 @@ app.get('/getAll', (req, res) => {
     client = [];
     var i = 0;
     try {
-        let fileContents = fs.readFileSync('./hosts.yml', 'utf-8',);
+        let fileContents = fs.readFileSync('./hosts.yml', 'utf-8', );
         const contents = JSON.stringify(fileContents);
 
         for (let index = 0; index < contents.length; index++) {
             if (contents.substring(index, index + 13) == 'ansible_host=') {
                 ipAddress = contents.substring(index + 13, index + 26);
 
-            } if (contents.substring(index, index + 14) == 'dashboard_url=') {
+            }
+            if (contents.substring(index, index + 14) == 'dashboard_url=') {
                 dashboardUrl = contents.substring(index + 14, contents.length - 2);
                 dashboardUrl = dashboardUrl.split('\\"');
                 dashboardUrl = dashboardUrl[1];
@@ -117,27 +118,71 @@ app.get('/getAll', (req, res) => {
 })
 
 app.get('/capture/:ip', (req, res) => {
-    try {   
-        const fileName = '/home/qmatic/ansible/npr/test/variables2.json';
+    try {
+        // const fileName = '/home/qmatic/ansible/npr/test/variables2.json';
+        const fileName = './variables2.json';
         const file = require(fileName);
-        // console.log(file);
 
-        let data = JSON.stringify({"ansible_host": req.params.ip}
-        );
-        console.log(data);
+        let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
+        var jsonString = JSON.stringify(fileContents);
+        var i = 0;
+        for (let index = 0; index < jsonString.length; index++) {
+            var ipaddress;
+            if (jsonString.substring(index, index + 13) == "ansible_host=") {
 
-        fs.writeFile(fileName, data, (err) => {
-            if (err) throw err;
-            console.log('Data written to file');
-        });
+                ipaddress = jsonString.substring(index + 13, index + 26);
+
+                var lastLetter = ipaddress.substring(ipaddress.length, ipaddress.length - 1);
+
+                if (parseInt(lastLetter) >= 0) {
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+                } else if (lastLetter == " ") {
+                    ipaddress = ipaddress.substring(0, ipaddress.length - 1);
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+
+                } else {
+                    ipaddress = ipaddress.substring(0, ipaddress.length - 2);
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+                }
+                i++;
+            }
+        }
+        let parameter = req.params.ip;
+        console.log("parameter" + parameter);
+        for (let index = 0; index < userDetails.length; index++) {
+            console.log("userdetail ip: " + userDetails[index]["ip_address"]);
+
+            if (parameter == userDetails[index]["ip_address"]) {
+                let data = JSON.stringify({ "ansible_host": parameter });
+                console.log(data);
+                fs.writeFile(fileName, data, (err) => {
+                    if (err) throw err;
+                    console.log('Data written to file');
+                });
+                res.json(file);
+            } else {
+                res.status(400);
+                res.setHeader("Content-Type", "text/html");
+                res.write("<p>Invalid</p>");
+                res.end();
+            }
+        }
+
+
+        // console.log(data);
+
+
 
         // fs.readFile(fileName, (err, data) => {
         //     if (err) throw err;
         //     let addressData = JSON.parse(data);
         //     // console.log(addressData);
         // });
-        
-        res.json(file);
+
+
     } catch (error) {
         console.log(error);
         res.send(error);
@@ -179,4 +224,18 @@ app.get('/hosts', (req, res) => {
         console.log(e);
     }
     res.json(users);
+})
+
+app.get('/dashboardtest', (req, res) => {
+    try {
+        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({ foo: 'bar' });
+        var promise = command.exec();
+        promise.then(function(result) {
+            console.log(result.output);
+            console.log(result.code);
+        })
+    } catch (e) {
+        console.log(e);
+    }
+    // res.json(users);
 })
