@@ -151,7 +151,7 @@ app.get('/docapture/:ip', (req, res) => {
 
 app.get('/gethosts', (req, res) => {
     try {
-        let fileContents = fs.readFileSync('./ansible/npr/test/inventory/hosts.yml', 'utf-8');
+        let fileContents = fs.readFileSync('root/ansible/npr/test/inventory/hosts.yml', 'utf-8');
         var jsonString = JSON.stringify(fileContents);
         var i = 0;
         for (let index = 0; index < jsonString.length; index++) {
