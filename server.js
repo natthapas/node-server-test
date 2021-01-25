@@ -149,7 +149,7 @@ app.get('/docapture/:ip', (req, res) => {
 })
 
 
-app.get('/gethosts', (req, res) => {
+app.get('/hosts', (req, res) => {
     try {
         let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
         var jsonString = JSON.stringify(fileContents);
