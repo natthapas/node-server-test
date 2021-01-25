@@ -237,7 +237,9 @@ app.get('/dashboardtest', (req, res) => {
             console.log(result.output);
             console.log(result.code);
         })
+        res.status(200).json({ msg: "200" });
     } catch (e) {
+        res.status(200).json({ msg: e });
         console.log(e);
     }
     // res.json(users);
