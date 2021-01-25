@@ -142,7 +142,12 @@ app.get('/capture/:ip', (req, res) => {
 
         const fileNameRes = '/home/qmatic/ansible/npr/test/variables2.json';
         const fileRes = require(fileNameRes);
-        res.json(fileRes);
+        fs.readFile(fileNameRes, (err, data2) => {
+            if (err) throw err;
+            let addressData = JSON.parse(data2);
+            console.log(addressData);
+        });
+        res.json(addressData);
 
     } catch (error) {
         console.log(error);
