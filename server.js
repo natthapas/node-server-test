@@ -139,8 +139,7 @@ app.get('/capture/:ip', (req, res) => {
         //     // console.log(addressData);
         // });
         
-        // res.json(file);
-        res.status(200).send();
+        res.json(data);
     } catch (error) {
         console.log(error);
         res.send(error);
