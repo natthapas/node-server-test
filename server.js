@@ -49,40 +49,40 @@ app.delete('/books/:id', (req, res) => {
     res.status(204).send()
 })
 
-app.get('/users', (req, res) => {
-    try {
-        let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
-        var jsonString = JSON.stringify(fileContents);
-        var i = 0;
-        for (let index = 0; index < jsonString.length; index++) {
-            var ipaddress;
-            if (jsonString.substring(index, index + 13) == "ansible_host=") {
+// app.get('/users', (req, res) => {
+//     try {
+//         let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
+//         var jsonString = JSON.stringify(fileContents);
+//         var i = 0;
+//         for (let index = 0; index < jsonString.length; index++) {
+//             var ipaddress;
+//             if (jsonString.substring(index, index + 13) == "ansible_host=") {
 
-                ipaddress = jsonString.substring(index + 13, index + 26);
+//                 ipaddress = jsonString.substring(index + 13, index + 26);
 
-                var lastLetter = ipaddress.substring(ipaddress.length, ipaddress.length - 1);
+//                 var lastLetter = ipaddress.substring(ipaddress.length, ipaddress.length - 1);
 
-                if (parseInt(lastLetter) >= 0) {
-                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
-                    users.push(userDetails[i]);
-                } else if (lastLetter == " ") {
-                    ipaddress = ipaddress.substring(0, ipaddress.length - 1);
-                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
-                    users.push(userDetails[i]);
+//                 if (parseInt(lastLetter) >= 0) {
+//                     userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+//                     users.push(userDetails[i]);
+//                 } else if (lastLetter == " ") {
+//                     ipaddress = ipaddress.substring(0, ipaddress.length - 1);
+//                     userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+//                     users.push(userDetails[i]);
 
-                } else {
-                    ipaddress = ipaddress.substring(0, ipaddress.length - 2);
-                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
-                    users.push(userDetails[i]);
-                }
-                i++;
-            }
-        }
-    } catch (e) {
-        console.log(e);
-    }
-    res.json(users);
-})
+//                 } else {
+//                     ipaddress = ipaddress.substring(0, ipaddress.length - 2);
+//                     userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+//                     users.push(userDetails[i]);
+//                 }
+//                 i++;
+//             }
+//         }
+//     } catch (e) {
+//         console.log(e);
+//     }
+//     res.json(users);
+// })
 
 app.get('/getAll', (req, res) => {
 
@@ -116,9 +116,9 @@ app.get('/getAll', (req, res) => {
     }
 })
 
-app.get('/docapture/:ip', (req, res) => {
-    try {
-        const fileName = './variables2.json';
+app.get('/capture/:ip', (req, res) => {
+    try {   
+        const fileName = '/home/qmatic/ansible/npr/test/variables2.json';
         const file = require(fileName);
         // console.log(file);
 
