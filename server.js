@@ -90,32 +90,96 @@ app.get('/getAll', (req, res) => {
     client = [];
     var i = 0;
     try {
-    let fileContents = fs.readFileSync('./hosts.yml', 'utf-8',);
-    const contents = JSON.stringify(fileContents);
+        let fileContents = fs.readFileSync('./hosts.yml', 'utf-8',);
+        const contents = JSON.stringify(fileContents);
 
-    for (let index = 0; index < contents.length; index++) {
-        if(contents.substring(index,index + 13) == 'ansible_host='){
-            ipAddress = contents.substring(index + 13,index + 26);
+        for (let index = 0; index < contents.length; index++) {
+            if (contents.substring(index, index + 13) == 'ansible_host=') {
+                ipAddress = contents.substring(index + 13, index + 26);
 
-        } if(contents.substring(index,index + 14) == 'dashboard_url='){
-            dashboardUrl = contents.substring(index + 14, contents.length-2);
-            dashboardUrl = dashboardUrl.split('\\"');
-            dashboardUrl = dashboardUrl[1];
-            clientDetail[i] = {"ip_address" : ipAddress, "dashboard_url": dashboardUrl};
-            client.push(clientDetail[i]);
-            i++;
-            // console.log(dashboardUrl);
+            } if (contents.substring(index, index + 14) == 'dashboard_url=') {
+                dashboardUrl = contents.substring(index + 14, contents.length - 2);
+                dashboardUrl = dashboardUrl.split('\\"');
+                dashboardUrl = dashboardUrl[1];
+                clientDetail[i] = { "ip_address": ipAddress, "dashboard_url": dashboardUrl };
+                client.push(clientDetail[i]);
+                i++;
+                // console.log(dashboardUrl);
+            }
+
+            // console.log(client);
         }
+        res.json(client);
 
-        // console.log(client);
+    } catch (e) {
+        console.log(e);
     }
-    res.json(client);
+})
 
-} catch (e) {
-    console.log(e);
-}
+app.get('/docapture/:ip', (req, res) => {
+    try {
+        const fileName = './variables2.json';
+        const file = require(fileName);
+        // console.log(file);
+
+        let data = JSON.stringify({
+            "ansible_host": req.params.ip
+        }
+        );
+        console.log(data);
+
+        fs.writeFile(fileName, data, (err) => {
+            if (err) throw err;
+            console.log('Data written to file');
+        });
+
+        // fs.readFile(fileName, (err, data) => {
+        //     if (err) throw err;
+        //     let addressData = JSON.parse(data);
+        //     // console.log(addressData);
+        // });
+
+        res.json(file);
+
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+
 })
 
 
+app.get('/gethosts', (req, res) => {
+    try {
+        let fileContents = fs.readFileSync('./ansible/npr/test/inventory/hosts.yml', 'utf-8');
+        var jsonString = JSON.stringify(fileContents);
+        var i = 0;
+        for (let index = 0; index < jsonString.length; index++) {
+            var ipaddress;
+            if (jsonString.substring(index, index + 13) == "ansible_host=") {
 
+                ipaddress = jsonString.substring(index + 13, index + 26);
 
+                var lastLetter = ipaddress.substring(ipaddress.length, ipaddress.length - 1);
+
+                if (parseInt(lastLetter) >= 0) {
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+                } else if (lastLetter == " ") {
+                    ipaddress = ipaddress.substring(0, ipaddress.length - 1);
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+
+                } else {
+                    ipaddress = ipaddress.substring(0, ipaddress.length - 2);
+                    userDetails[i] = { "name": "COM" + (i + 1) + "", "ip_address": ipaddress };
+                    users.push(userDetails[i]);
+                }
+                i++;
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    res.json(users);
+})
