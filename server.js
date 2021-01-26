@@ -321,11 +321,13 @@ app.get('/test', (req, res) => {
 
             let hostPattern = new RegExp(/[ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/g);
             let dashboardPattern = new RegExp(/[dashboard_url=]{14}"(.*?)"/g);
-            let namePattern = new RegExp(/([a-z,A-Z]+[0-9])/g);
+            let namePattern = new RegExp(/([a-z,A-Z]+[0-9]+)/g);
 
             var hostMatch = hostPattern.exec(largeMatch[index]);
             var dashboardMatch = dashboardPattern.exec(largeMatch[index]);
             var nameMatch = namePattern.exec(largeMatch[index]);
+            console.log(nameMatch);
+
 
             if (hostMatch != null) {
                 var hostSubstring;
