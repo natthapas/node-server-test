@@ -247,8 +247,11 @@ app.get('/dashboardtest', (req, res) => {
 
 app.get('/screenshot/:ip', (req, res) => {
     try {
+
+
+
         let parameter = req.params.ip;
-        console.log(parameter);
+        console.log("Capturing IP: " + parameter);
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/screenshot').variables({
             ansible_host: parameter,
         });
@@ -259,6 +262,95 @@ app.get('/screenshot/:ip', (req, res) => {
             console.log(result.code);
         })
         res.status(200).json({ msg: "200", Inputparameter: parameter });
+    } catch (e) {
+        res.status(400).json({ msg: e });
+        console.log(e);
+    }
+    // res.json(users);
+})
+
+// app.get('/test', (req, res) => {
+//     try {
+//         let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
+//         var hostsData = JSON.stringify(fileContents);
+//         var clients = [];
+
+//         // let shuttlePattern = new RegExp(/[shuttle]{7}[0-9]{0,3}[0-9$]/g);
+//         // let hostPattern = new RegExp(/[ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/g);
+//         // let dashboardPattern = new RegExp(/[dashboard_url=]{14}"(.*?)"/g);
+
+//         // var shuttleMatch = shuttlePattern.exec(hostsData);
+//         // var hostMatch = hostPattern.exec(fileContents);
+//         // var dashboardMatch = dashboardPattern.exec(fileContents);
+
+//         while (hostMatch != null) {
+//             var index = 0;
+//             //subString sub Data
+//             // var hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
+
+//             clients.push({ "ipaddress": hostSubstring, "dashboard_url": dashboardMatch });
+
+//             console.log(dashboardMatch);
+//             //After push
+//             // shuttleMatch = shuttlePattern.exec(hostsData);
+//             // hostMatch = hostPattern.exec(fileContents);
+//             // dashboardMatch = dashboardPattern.exec(fileContents);
+//             index++;
+//         }
+//         res.status(200).json({ clientsData: clients, msg: "200" });
+//     } catch (e) {
+//         res.status(400).json({ msg: e });
+//         console.log(e);
+//     }
+//     // res.json(users);
+// })
+
+
+app.get('/test', (req, res) => {
+    try {
+        let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
+        // let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
+
+        var data = [];
+
+        let largePattern = new RegExp(/[a-z,A-Z,0-9,"\]]{2,110}[0-9$][' '][ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}([' ']*)+([dashboard_url=]{14}(\"(.*?)")*)?/g);
+
+        var largeMatch = largePattern.exec(fileContents);
+        while (largeMatch != null) {
+            let index = 0;
+
+            let hostPattern = new RegExp(/[ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/g);
+            let dashboardPattern = new RegExp(/[dashboard_url=]{14}"(.*?)"/g);
+            let namePattern = new RegExp(/([a-z,A-Z]+[0-9])/g);
+
+            var hostMatch = hostPattern.exec(largeMatch[index]);
+            var dashboardMatch = dashboardPattern.exec(largeMatch[index]);
+            var nameMatch = namePattern.exec(largeMatch[index]);
+
+            if (hostMatch != null) {
+                var hostSubstring;
+                var dashboardSubstring;
+                if (dashboardMatch != null) {
+                    hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
+                    dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
+                    data.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+                    hostMatch = hostPattern.exec(largeMatch[index]);
+                    dashboardMatch = dashboardPattern.exec(largeMatch[index]);
+                } else {
+                    hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
+                    data.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
+                    hostMatch = hostPattern.exec(largeMatch[index]);
+                }
+
+            }
+            largeMatch = largePattern.exec(fileContents);
+            index++;
+
+        }
+
+        console.log(data);
+
+        res.status(200).json({ data: data, msg: "200" });
     } catch (e) {
         res.status(400).json({ msg: e });
         console.log(e);
