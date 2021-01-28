@@ -364,16 +364,19 @@ app.get('/clients', (req, res) => {
 app.get('/client/:id', (req, res) => {
     try {
         var id = req.params.id
-        console.log("ID :" + id);
         var dataById = [];
         if (id == null) {
             res.status(200).json({ data: "invalid id", msg: "200" });
         } else {
+
             for (let index = 0; index < data.length; index++) {
                 if (data[index].id == id) {
+                    console.log("Data ID :" + data[index].id);
+                    console.log("Param ID :" + id);
                     dataById.push(data[index]);
                 }
             }
+
             res.status(200).json({ data: dataById, msg: "200" });
         }
 
