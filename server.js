@@ -178,8 +178,8 @@ app.post('/shutdown', (req, res) => {
 
 app.get('/capimage/:path', (req, res) => {
     try {
-        var parameter = req.params.path;
-        let buff = new Buffer(data, 'base64');
+        var base64Parameter = req.params.path;
+        let buff = new Buffer(base64Parameter, 'base64');
         parameter = buff.toString('ascii');
         console.log(parameter);
         fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + parameter + '/screenshot.png', function(err, image) {
