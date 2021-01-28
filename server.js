@@ -373,7 +373,7 @@ app.post('/capture', (req, res) => {
         })
 
         res.status(201).json({ data: req.body, msg: "201" });
-        console.log(req.body);
+        // console.log(req.body);
     } catch (e) {
         res.status(400).json({ msg: e });
         console.log(e);
@@ -384,17 +384,17 @@ app.post('/capture', (req, res) => {
 app.post('/restartdashboard', (req, res) => {
     try {
         const clientdata = {
-            name: req.body.client_name,
-            dashboardurl: req.body.client_dashboardurl
-        }
-        var clientName = clientdata.name;
+                // name: req.body.client_name,
+                dashboardurl: req.body.client_dashboardurl
+            }
+            // var clientName = clientdata.name;
         var clientDashboardurl = clientdata.dashboardurl;
 
-        console.log(clientName);
+        // console.log(clientName);
         console.log(clientDashboardurl);
 
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({
-            name: clientdata.client_name,
+            // name: clientdata.client_name,
             dashboardurl: clientdata.client_dashboardurl
         });
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
