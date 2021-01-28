@@ -363,7 +363,7 @@ app.post('/capture', (req, res) => {
     try {
         var name = req.body.name;
 
-        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/shutter').variables({ name });
+        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/shutter').variables(name);
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
         var playbookExecute = command.exec();
         playbookExecute.then(function(result) {
