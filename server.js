@@ -369,6 +369,7 @@ app.post('/capture', (req, res) => {
         playbookExecute.then(function(result) {
             console.log(result.output);
             console.log(result.code);
+            console.log("inhere");
         })
 
         res.status(201).json({ data: req.body, msg: "201" });
