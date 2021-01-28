@@ -388,14 +388,14 @@ app.post('/restartdashboard', (req, res) => {
                 dashboardurl: req.body.client_dashboardurl
             }
             // var clientName = clientdata.name;
-        var clientDashboardurl = clientdata.dashboardurl;
-
+        var clientDashboardurl = req.body.dashboard_url;
+        console.log(clientDashboardurl);
         // console.log(clientName);
         console.log(clientDashboardurl);
 
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({
             // name: clientdata.client_name,
-            dashboardurl: clientdata.client_dashboardurl
+            clientDashboardurl
         });
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
         var promise = command.exec();
