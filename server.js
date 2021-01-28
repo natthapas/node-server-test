@@ -126,7 +126,13 @@ app.post('/capture', (req, res) => {
         playbookExecute.then(function(result) {
             console.log(result.output);
             console.log(result.code);
-        }).then(res.status(201).sendFile('home/' + serverName + '/ansible/npr/test/screenshot/' + ip + "/screenshot.png"));
+        }).then(
+            fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + 'screenshot.png', function(err, data) {
+                if (err) throw err; // Fail if the file can't be read.
+                res.writeHead(200, { 'Content-Type': 'image/png' });
+                res.end(data); // Send the file data to the browser.
+            })
+        );
 
 
 
