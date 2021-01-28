@@ -371,8 +371,6 @@ app.get('/client/:id', (req, res) => {
 
             for (let index = 0; index < data.length; index++) {
                 if (data[index].id == id) {
-                    console.log("Data ID :" + data[index].id);
-                    console.log("Param ID :" + id);
                     dataById.push(data[index]);
                 }
             }
