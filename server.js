@@ -302,18 +302,16 @@ app.get('/dashboardtest', (req, res) => {
 //     }
 //     // res.json(users);
 // })
+var data = [];
 
 
-app.get('/clients/:id', (req, res) => {
+app.get('/clients', (req, res) => {
     try {
         let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
         // let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
-        let idValue = 1;
-        var data = [];
-        var id = [];
 
         let largePattern = new RegExp(/[a-z,A-Z,0-9,"\]]{2,110}[0-9$][' '][ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}([' ']*)+([dashboard_url=]{14}(\"(.*?)")*)?/g);
-
+        var idValue = 1;
         var largeMatch = largePattern.exec(fileContents);
         while (largeMatch != null) {
             let index = 0;
@@ -333,14 +331,12 @@ app.get('/clients/:id', (req, res) => {
                 if (dashboardMatch != null) {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
-
-                    data.push({ "id": idValue, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
-
+                    data.push(idValue[{ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring }]);
                     hostMatch = hostPattern.exec(largeMatch[index]);
                     dashboardMatch = dashboardPattern.exec(largeMatch[index]);
                 } else {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
-                    data.push({ "id": idValue, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
+                    data.push(idValue[{ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null }]);
                     hostMatch = hostPattern.exec(largeMatch[index]);
                 }
 
@@ -348,15 +344,10 @@ app.get('/clients/:id', (req, res) => {
             largeMatch = largePattern.exec(fileContents);
             index++;
             idValue++;
-
         }
 
 
-        if (req.params.id != null) {
-            res.status(200).json({ data: data, msg: "200" });
-        } else {
-            res.status(200).json({ data: data, msg: "200" });
-        }
+        res.status(200).json({ data: data, msg: "200" });
         // console.log(data);
 
     } catch (e) {
@@ -366,6 +357,20 @@ app.get('/clients/:id', (req, res) => {
     // res.json(users);
 })
 
+app.get('/client/:id', (req, res) => {
+    try {
+
+
+
+        res.status(200).json({ data: data, msg: "200" });
+        // console.log(data);
+
+    } catch (e) {
+        res.status(400).json({ msg: e });
+        console.log(e);
+    }
+    // res.json(users);
+})
 
 app.post('/capture', (req, res) => {
     try {
