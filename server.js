@@ -132,9 +132,9 @@ app.post('/capture', (req, res) => {
             console.log(result.output);
             console.log(result.code);
         }).then(
-            // setTimeout(readImage, 20000)
+            setTimeout(readImage, 20000)
         );
-        res.status(201).json({ data: req.body, msg: "201" });
+        // res.status(201).json({ data: req.body, msg: "201" });
         // console.log(req.body);
     } catch (e) {
         res.status(400).json({ msg: e });
