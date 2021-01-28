@@ -302,11 +302,12 @@ app.get('/dashboardtest', (req, res) => {
 //     }
 //     // res.json(users);
 // })
-let data = [];
-let idData = [];
+
 
 app.get('/clients', (req, res) => {
     try {
+        var data = [];
+        var idData = [];
         let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
         // let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
 
@@ -331,14 +332,14 @@ app.get('/clients', (req, res) => {
                 if (dashboardMatch != null) {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
-                    IdData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
-                    data.push(IdData);
+                    idData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+                    data.push(idData);
                     hostMatch = hostPattern.exec(largeMatch[index]);
                     dashboardMatch = dashboardPattern.exec(largeMatch[index]);
                 } else {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     IdData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
-                    data.push(IdData);
+                    data.push(idData);
                     hostMatch = hostPattern.exec(largeMatch[index]);
                 }
 
