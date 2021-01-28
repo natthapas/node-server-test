@@ -306,6 +306,7 @@ app.get('/dashboardtest', (req, res) => {
 var data = [];
 var idData = [];
 
+
 app.get('/clients', (req, res) => {
     try {
 
@@ -371,7 +372,7 @@ app.get('/client/:id', (req, res) => {
 
             for (let index = 0; index < data.length; index++) {
                 if (data[index].id == id) {
-                    dataById.push(data[index]);
+                    dataById = data[index];
                 }
             }
 
