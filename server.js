@@ -391,11 +391,8 @@ app.post('/capture', (req, res) => {
 
 app.post('/restartdashboard', (req, res) => {
     try {
-        const clientdata = {
-                // name: req.body.client_name,
-                dashboardurl: req.body.client_dashboardurl
-            }
-            // var clientName = clientdata.name;
+
+        var clientIp = req.body.ip_address;
         var clientDashboardurl = req.body.dashboard_url;
         console.log(clientDashboardurl);
         // console.log(clientName);
@@ -403,6 +400,7 @@ app.post('/restartdashboard', (req, res) => {
 
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({
             // name: clientdata.client_name,
+            ansible_host: clientIp,
             dashboard_url: clientDashboardurl
         });
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
