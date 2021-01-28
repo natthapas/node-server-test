@@ -364,6 +364,7 @@ app.get('/clients', (req, res) => {
 app.get('/client/:id', (req, res) => {
     try {
         var id = req.params.id
+        console.log("ID :" + id);
         var dataById = [];
         if (id == null) {
             res.status(200).json({ data: "invalid id", msg: "200" });
