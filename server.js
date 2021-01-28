@@ -413,10 +413,10 @@ app.post('/capture', (req, res) => {
 
 app.post('/restartdashboard', (req, res) => {
     try {
-
         var clientIp = req.body.ip_address;
         var clientDashboardurl = req.body.dashboard_url;
         console.log(clientDashboardurl);
+        console.log(clientIp);
         // console.log(clientName);
         // console.log(clientDashboardurl);
 
