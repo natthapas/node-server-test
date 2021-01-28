@@ -316,7 +316,6 @@ app.get('/clients', (req, res) => {
         var largeMatch = largePattern.exec(fileContents);
         while (largeMatch != null) {
             let index = 0;
-
             let hostPattern = new RegExp(/[ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/g);
             let dashboardPattern = new RegExp(/[dashboard_url=]{14}"(.*?)"/g);
             let namePattern = new RegExp(/([a-z,A-Z]+[0-9]+)/g);
@@ -324,7 +323,7 @@ app.get('/clients', (req, res) => {
             var hostMatch = hostPattern.exec(largeMatch[index]);
             var dashboardMatch = dashboardPattern.exec(largeMatch[index]);
             var nameMatch = namePattern.exec(largeMatch[index]);
-            console.log(nameMatch);
+            // console.log(nameMatch);
 
 
             if (hostMatch != null) {
@@ -333,12 +332,12 @@ app.get('/clients', (req, res) => {
                 if (dashboardMatch != null) {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
-                    data.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+                    data.push({ "id": index + 1, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
                     hostMatch = hostPattern.exec(largeMatch[index]);
                     dashboardMatch = dashboardPattern.exec(largeMatch[index]);
                 } else {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
-                    data.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
+                    data.push({ "id": index + 1, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
                     hostMatch = hostPattern.exec(largeMatch[index]);
                 }
 
@@ -348,7 +347,7 @@ app.get('/clients', (req, res) => {
 
         }
 
-        console.log(data);
+        // console.log(data);
 
         res.status(200).json({ data: data, msg: "200" });
     } catch (e) {
@@ -369,7 +368,6 @@ app.post('/capture', (req, res) => {
         playbookExecute.then(function(result) {
             console.log(result.output);
             console.log(result.code);
-            console.log("inhere");
         })
 
         res.status(201).json({ data: req.body, msg: "201" });
@@ -391,7 +389,7 @@ app.post('/restartdashboard', (req, res) => {
         var clientDashboardurl = req.body.dashboard_url;
         console.log(clientDashboardurl);
         // console.log(clientName);
-        console.log(clientDashboardurl);
+        // console.log(clientDashboardurl);
 
         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/dashboard').variables({
             // name: clientdata.client_name,
@@ -404,7 +402,6 @@ app.post('/restartdashboard', (req, res) => {
             console.log(result.code);
         })
         res.status(200).json({ msg: "200" });
-        res.json(req.body);
     } catch (e) {
         res.status(400).json({ msg: e });
         console.log(e);
