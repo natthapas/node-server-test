@@ -333,13 +333,13 @@ app.get('/clients', (req, res) => {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
                     idData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
-                    data.push({ "id": idValue, "clients": idData });
+                    data.push({ "id": idValue, "clients": idData[index] });
                     hostMatch = hostPattern.exec(largeMatch[index]);
                     dashboardMatch = dashboardPattern.exec(largeMatch[index]);
                 } else {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     idData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
-                    data.push({ "id": idValue, "clients": idData });
+                    data.push({ "id": idValue, "clients": idData[index] });
                     hostMatch = hostPattern.exec(largeMatch[index]);
                 }
 
