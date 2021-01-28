@@ -120,15 +120,13 @@ app.post('/capture', (req, res) => {
     try {
         var ip = req.body.ip_address;
 
-        console.log(__dirname);
-
         var command = new Ansible.Playbook().playbook('/home/' + serverName + '/ansible/npr/test/shutter').variables({ ansible_host: ip });
         command.inventory('/home/' + serverName + '/ansible/npr/test/inventory/hosts')
         var playbookExecute = command.exec();
         playbookExecute.then(function(result) {
             console.log(result.output);
             console.log(result.code);
-        }).then(res.status(201).sendFile('./home/' + serverName + '/ansible/npr/test/screenshot/' + ip + "/screenshot.png"));
+        }).then(res.status(201).sendFile('home/' + serverName + '/ansible/npr/test/screenshot/' + ip + "/screenshot.png"));
 
 
 
