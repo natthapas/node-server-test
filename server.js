@@ -15,7 +15,6 @@ app.use(express.static('public'));
 app.use('/images', express.static('images'));
 const path = require("path");
 const url = require("url");
-const { setTimeout } = require('timers');
 
 
 app.use(cors({ origin: 'http://localhost:4200' }));
@@ -117,20 +116,10 @@ app.get('/client/:id', (req, res) => {
     // res.json(users);
 })
 
-var ip;
-
-function readImage() {
-    fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, data) {
-        if (err) throw err; // Fail if the file can't be read.
-        res.writeHead(200, { 'Content-Type': 'image/png' });
-        res.end(data); // Send the file data to the browser.
-    })
-}
-
 
 app.post('/capture', (req, res) => {
     try {
-        ip = req.body.ip_address;
+        var ip = req.body.ip_address;
 
         var command = new Ansible.Playbook().playbook('/home/' + serverName + '/ansible/npr/test/shutter').variables({ ansible_host: ip });
         command.inventory('/home/' + serverName + '/ansible/npr/test/inventory/hosts')
@@ -138,7 +127,13 @@ app.post('/capture', (req, res) => {
         playbookExecute.then(function(result) {
             console.log(result.output);
             console.log(result.code);
-        }).then(setTimeout(readImage, 18000));
+        }).then(
+            setTimeout(fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, data) {
+                if (err) throw err; // Fail if the file can't be read.
+                res.writeHead(200, { 'Content-Type': 'image/png' });
+                res.end(data); // Send the file data to the browser.
+            }), 18000)
+        );
 
 
 
