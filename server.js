@@ -120,9 +120,11 @@ app.post('/capture', (req, res) => {
         function readImage() {
             fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, image) {
                 if (err) throw err; // Fail if the file can't be read.
-                res.writeHead(200, { 'Content-Type': 'image/png' });
-                res.end(image); // Send the file data to the browser.
-            })
+                // res.writeHead(200, { 'Content-Type': 'image/png' });
+                // res.end(image); // Send the file data to the browser.
+                res.writeHead(200, { 'Content-Type': 'image/jpg' });
+                res.end(image, 'binary');
+            });
         }
 
         var command = new Ansible.Playbook().playbook('/home/' + serverName + '/ansible/npr/test/shutter').variables({ ansible_host: ip });
@@ -206,4 +208,30 @@ app.post('/shutdown', (req, res) => {
         res.status(400).json({ msg: error });
         console.log(error);
     }
+})
+
+app.post('/capturetest', (req, res) => {
+    try {
+
+        console.log(req.body);
+        var ip = req.body.ip_address;
+
+
+
+        fs.readFile('./img.jpg', function(err, image) {
+            if (err) throw err; // Fail if the file can't be read.
+            // res.writeHead(200, { 'Content-Type': 'image/png' });
+            // res.end(image); // Send the file data to the browser.
+            res.writeHead(200, { 'Content-Type': 'image/jpg' });
+            res.end(image, 'binary');
+        });
+
+
+        // res.status(201).json({ data: req.body, msg: "201" });
+        // console.log(req.body);
+    } catch (e) {
+        res.status(400).json({ msg: e });
+        console.log(e);
+    }
+    // res.json(users);
 })
