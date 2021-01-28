@@ -119,7 +119,7 @@ app.post('/capture', (req, res) => {
             fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, data) {
                 if (err) throw err; // Fail if the file can't be read.
                 res.writeHead(200, { 'Content-Type': 'image/png' });
-                res.status(201).json({ image: data, msg: 201 }); // Send the file data to the browser.
+                res.json({ image: data, msg: 201 }); // Send the file data to the browser.
             })
         }
 
