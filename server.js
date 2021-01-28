@@ -245,29 +245,27 @@ app.get('/dashboardtest', (req, res) => {
     // res.json(users);
 })
 
-app.get('/screenshot/:ip', (req, res) => {
-    try {
+// app.get('/screenshot/:ip', (req, res) => {
+//     try {
 
-
-
-        let parameter = req.params.ip;
-        console.log("Capturing IP: " + parameter);
-        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/screenshot').variables({
-            ansible_host: parameter,
-        });
-        command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
-        var promise = command.exec();
-        promise.then(function(result) {
-            console.log(result.output);
-            console.log(result.code);
-        })
-        res.status(200).json({ msg: "200", Inputparameter: parameter });
-    } catch (e) {
-        res.status(400).json({ msg: e });
-        console.log(e);
-    }
-    // res.json(users);
-})
+//         let parameter = req.params.ip;
+//         console.log("Capturing IP: " + parameter);
+//         var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/screenshot').variables({
+//             ansible_host: parameter,
+//         });
+//         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
+//         var promise = command.exec();
+//         promise.then(function(result) {
+//             console.log(result.output);
+//             console.log(result.code);
+//         })
+//         res.status(200).json({ msg: "200", Inputparameter: parameter });
+//     } catch (e) {
+//         res.status(400).json({ msg: e });
+//         console.log(e);
+//     }
+//     // res.json(users);
+// })
 
 // app.get('/test', (req, res) => {
 //     try {
@@ -306,7 +304,7 @@ app.get('/screenshot/:ip', (req, res) => {
 // })
 
 
-app.get('/test', (req, res) => {
+app.get('/clients', (req, res) => {
     try {
         let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
         // let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
@@ -353,6 +351,28 @@ app.get('/test', (req, res) => {
         console.log(data);
 
         res.status(200).json({ data: data, msg: "200" });
+    } catch (e) {
+        res.status(400).json({ msg: e });
+        console.log(e);
+    }
+    // res.json(users);
+})
+
+
+app.post('/capture', (req, res) => {
+    try {
+        var name = req.body.name;
+
+        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/shutter').variables({ name });
+        command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
+        var playbookExecute = command.exec();
+        playbookExecute.then(function(result) {
+            console.log(result.output);
+            console.log(result.code);
+        })
+
+        res.status(201).json({ data: req.body, msg: "201" });
+        console.log(req.body);
     } catch (e) {
         res.status(400).json({ msg: e });
         console.log(e);
