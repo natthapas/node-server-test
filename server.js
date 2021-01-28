@@ -302,8 +302,8 @@ app.get('/dashboardtest', (req, res) => {
 //     }
 //     // res.json(users);
 // })
-var data = [];
-
+let data = [];
+let idData = [];
 
 app.get('/clients', (req, res) => {
     try {
@@ -331,12 +331,14 @@ app.get('/clients', (req, res) => {
                 if (dashboardMatch != null) {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
-                    data.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+                    IdData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+                    data.push(IdData);
                     hostMatch = hostPattern.exec(largeMatch[index]);
                     dashboardMatch = dashboardPattern.exec(largeMatch[index]);
                 } else {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
-                    data.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
+                    IdData.push({ "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
+                    data.push(IdData);
                     hostMatch = hostPattern.exec(largeMatch[index]);
                 }
 
