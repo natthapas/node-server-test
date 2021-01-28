@@ -127,13 +127,12 @@ app.post('/capture', (req, res) => {
         playbookExecute.then(function(result) {
             console.log(result.output);
             console.log(result.code);
-        }).then(
-            setTimeout(fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, data) {
-                if (err) throw err; // Fail if the file can't be read.
-                res.writeHead(200, { 'Content-Type': 'image/png' });
-                res.end(data); // Send the file data to the browser.
-            }), 18000)
-        );
+        });
+        setTimeout(fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, data) {
+            if (err) throw err; // Fail if the file can't be read.
+            res.writeHead(200, { 'Content-Type': 'image/png' });
+            res.end(data); // Send the file data to the browser.
+        }), 18000);
 
 
 
