@@ -303,11 +303,12 @@ app.get('/dashboardtest', (req, res) => {
 //     // res.json(users);
 // })
 
+var data = [];
+var idData = [];
 
 app.get('/clients', (req, res) => {
     try {
-        var data = [];
-        var idData = [];
+
         let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
         // let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
 
@@ -362,10 +363,21 @@ app.get('/clients', (req, res) => {
 
 app.get('/client/:id', (req, res) => {
     try {
+        var id = req.params.id
+        var dataById = [];
+        if (id == null) {
+            res.status(200).json({ data: "invalid id", msg: "200" });
+        } else {
+            for (let index = 0; index < data.length; index++) {
+                if (data[index].id == id) {
+                    dataById.push(data[index]);
+                }
+            }
+            res.status(200).json({ data: dataById, msg: "200" });
+        }
 
 
 
-        res.status(200).json({ data: data, msg: "200" });
         // console.log(data);
 
     } catch (e) {
