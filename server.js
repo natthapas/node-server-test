@@ -95,20 +95,14 @@ app.get('/client/:id', (req, res) => {
         if (id == null) {
             res.status(200).json({ data: "invalid id", msg: "200" });
         } else {
-
             for (let index = 0; index < data.length; index++) {
                 if (data[index].id == id) {
                     dataById = data[index];
                 }
             }
-
             res.status(200).json({ data: dataById, msg: "200" });
         }
-
-
-
         // console.log(data);
-
     } catch (e) {
         res.status(400).json({ msg: e });
         console.log(e);
@@ -125,7 +119,7 @@ app.post('/capture', (req, res) => {
             fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, data) {
                 if (err) throw err; // Fail if the file can't be read.
                 res.writeHead(200, { 'Content-Type': 'image/png' });
-                res.end(data); // Send the file data to the browser.
+                res.status(201).json({ image: data, msg: 201 }); // Send the file data to the browser.
             })
         }
 
@@ -136,7 +130,7 @@ app.post('/capture', (req, res) => {
             console.log(result.output);
             console.log(result.code);
         }).then(
-            setTimeout(readImage, 18000)
+            setTimeout(readImage, 20000)
         );
         // res.status(201).json({ data: req.body, msg: "201" });
         // console.log(req.body);
@@ -163,7 +157,7 @@ app.post('/restartdashboard', (req, res) => {
             console.log(result.output);
             console.log(result.code);
         })
-        res.status(200).json({ message: "200", data: requestData });
+        res.status(201).json({ message: "201", data: requestData });
     } catch (error) {
         res.status(400).json({ msg: error });
         console.log(error);
@@ -184,7 +178,7 @@ app.post('/reboot', (req, res) => {
             console.log(result.output);
             console.log(result.code);
         })
-        res.status(200).json({ message: "200", data: requestData });
+        res.status(201).json({ message: "201", data: requestData });
     } catch (error) {
         res.status(400).json({ msg: error });
         console.log(error);
@@ -205,7 +199,7 @@ app.post('/shutdown', (req, res) => {
             console.log(result.output);
             console.log(result.code);
         })
-        res.status(200).json({ message: "200", data: requestData });
+        res.status(201).json({ message: "201", data: requestData });
     } catch (error) {
         res.status(400).json({ msg: error });
         console.log(error);
