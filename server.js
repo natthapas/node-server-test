@@ -176,7 +176,7 @@ app.post('/shutdown', (req, res) => {
     }
 })
 
-app.get('/capimage', (req, res) => {
+app.get('/capimage/:path', (req, res) => {
     try {
         var parameter = req.params.path;
         let buff = new Buffer(data, 'base64');
