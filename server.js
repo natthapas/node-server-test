@@ -111,40 +111,6 @@ app.get('/client/:id', (req, res) => {
 })
 
 
-app.post('/capture', (req, res) => {
-    try {
-
-        console.log(req.body);
-        var ip = req.body.ip_address;
-
-        function readImage() {
-            fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, image) {
-                if (err) throw err; // Fail if the file can't be read.
-                // res.writeHead(200, { 'Content-Type': 'image/png' });
-                // res.end(image); // Send the file data to the browser.
-                res.writeHead(200, { 'Content-Type': 'image/jpg' });
-                res.end(image, 'binary');
-            });
-        }
-
-        var command = new Ansible.Playbook().playbook('/home/' + serverName + '/ansible/npr/test/shutter').variables({ ansible_host: ip });
-        command.inventory('/home/' + serverName + '/ansible/npr/test/inventory/hosts')
-        var playbookExecute = command.exec();
-        playbookExecute.then(function(result) {
-            console.log(result.output);
-            console.log(result.code);
-        }).then(
-            setTimeout(readImage, 20000)
-        );
-        // res.status(201).json({ data: req.body, msg: "201" });
-        // console.log(req.body);
-    } catch (e) {
-        res.status(400).json({ msg: e });
-        console.log(e);
-    }
-    // res.json(users);
-})
-
 app.post('/restartdashboard', (req, res) => {
     try {
         const requestData = {
@@ -210,15 +176,10 @@ app.post('/shutdown', (req, res) => {
     }
 })
 
-app.post('/capturetest', (req, res) => {
+app.get('/capimage', (req, res) => {
     try {
 
-        console.log(req.body);
-        var ip = req.body.ip_address;
-
-
-
-        fs.readFile('./img.jpg', function(err, image) {
+        fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, image) {
             if (err) throw err; // Fail if the file can't be read.
             // res.writeHead(200, { 'Content-Type': 'image/png' });
             // res.end(image); // Send the file data to the browser.
@@ -228,6 +189,35 @@ app.post('/capturetest', (req, res) => {
 
 
         // res.status(201).json({ data: req.body, msg: "201" });
+        // console.log(req.body);
+    } catch (e) {
+        res.status(400).json({ msg: e });
+        console.log(e);
+    }
+    // res.json(users);
+})
+
+app.post('/capture', (req, res) => {
+    try {
+
+        console.log(req.body);
+        var ip = req.body.ip_address;
+        let buff = new Buffer(ip);
+        let ipBase64data = buff.toString('base64');
+
+        var command = new Ansible.Playbook().playbook('/home/' + serverName + '/ansible/npr/test/shutter').variables({ ansible_host: ip });
+        command.inventory('/home/' + serverName + '/ansible/npr/test/inventory/hosts')
+        var playbookExecute = command.exec();
+        playbookExecute.then(function(result) {
+            console.log(result.output);
+            console.log(result.code);
+        }).then(
+            setTimeout(sendResponse, 20000)
+        );
+
+        function sendResponse() {
+            res.status(201).json({ data: ipBase64data, msg: "201" });
+        }
         // console.log(req.body);
     } catch (e) {
         res.status(400).json({ msg: e });
