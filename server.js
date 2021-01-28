@@ -304,12 +304,13 @@ app.get('/dashboardtest', (req, res) => {
 // })
 
 
-app.get('/clients', (req, res) => {
+app.get('/clients/:id', (req, res) => {
     try {
         let fileContents = fs.readFileSync('/home/qmatic/ansible/npr/test/inventory/hosts', 'utf-8');
         // let fileContents = fs.readFileSync('./hosts.yml', 'utf-8');
-
+        let idValue = 1;
         var data = [];
+        var id = [];
 
         let largePattern = new RegExp(/[a-z,A-Z,0-9,"\]]{2,110}[0-9$][' '][ansible_host=]{13}[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}([' ']*)+([dashboard_url=]{14}(\"(.*?)")*)?/g);
 
@@ -332,24 +333,32 @@ app.get('/clients', (req, res) => {
                 if (dashboardMatch != null) {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
                     dashboardSubstring = dashboardMatch[index].substring(dashboardMatch[index].indexOf("=") + 2, dashboardMatch[index].length - 1);
-                    data.push({ "id": index + 1, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+
+                    data.push({ "id": idValue, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": dashboardSubstring });
+
                     hostMatch = hostPattern.exec(largeMatch[index]);
                     dashboardMatch = dashboardPattern.exec(largeMatch[index]);
                 } else {
                     hostSubstring = hostMatch[index].substring(hostMatch[index].indexOf("=") + 1, hostMatch[index].length);
-                    data.push({ "id": index + 1, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
+                    data.push({ "id": idValue, "name": nameMatch[0], "ip_address": hostSubstring, "dashboard_url": null });
                     hostMatch = hostPattern.exec(largeMatch[index]);
                 }
 
             }
             largeMatch = largePattern.exec(fileContents);
             index++;
+            idValue++;
 
         }
 
+
+        if (req.params.id != null) {
+            res.status(200).json({ data: data, msg: "200" });
+        } else {
+            res.status(200).json({ data: data, msg: "200" });
+        }
         // console.log(data);
 
-        res.status(200).json({ data: data, msg: "200" });
     } catch (e) {
         res.status(400).json({ msg: e });
         console.log(e);
@@ -361,8 +370,9 @@ app.get('/clients', (req, res) => {
 app.post('/capture', (req, res) => {
     try {
         var name = req.body.name;
+        var ip = req.body.ip_address;
 
-        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/shutter').variables(name);
+        var command = new Ansible.Playbook().playbook('/home/qmatic/ansible/npr/test/shutter').variables({ ansible_host: ip });
         command.inventory('/home/qmatic/ansible/npr/test/inventory/hosts')
         var playbookExecute = command.exec();
         playbookExecute.then(function(result) {
