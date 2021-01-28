@@ -178,8 +178,11 @@ app.post('/shutdown', (req, res) => {
 
 app.get('/capimage', (req, res) => {
     try {
-
-        fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + ip + '/screenshot.png', function(err, image) {
+        var parameter = req.params.path;
+        let buff = new Buffer(data, 'base64');
+        parameter = buff.toString('ascii');
+        console.log(parameter);
+        fs.readFile('/home/' + serverName + '/ansible/npr/test/screenshot/' + parameter + '/screenshot.png', function(err, image) {
             if (err) throw err; // Fail if the file can't be read.
             // res.writeHead(200, { 'Content-Type': 'image/png' });
             // res.end(image); // Send the file data to the browser.
