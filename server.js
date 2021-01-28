@@ -113,6 +113,8 @@ app.get('/client/:id', (req, res) => {
 
 app.post('/capture', (req, res) => {
     try {
+
+        console.log(req.body);
         var ip = req.body.ip_address;
 
         function readImage() {
